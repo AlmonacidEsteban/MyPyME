@@ -1,3 +1,3 @@
 # Render deployment configuration
-web: chmod +x start.sh && ./start.sh
+web: gunicorn app:app --bind 0.0.0.0:$PORT
 release: cd backend && python manage.py migrate
