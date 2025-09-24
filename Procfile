@@ -1,2 +1,2 @@
 # Railway deployment configuration
-web: gunicorn backend.mypyme.wsgi:application
+web: gunicorn mypyme.wsgi:application
