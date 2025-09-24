@@ -1,14 +1,13 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "DOCKERFILE",
-    "dockerfilePath": "Dockerfile"
+    "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python backend/manage.py migrate && python backend/manage.py collectstatic --noinput && gunicorn --chdir backend mypyme.wsgi:application --bind 0.0.0.0:$PORT",
+    "startCommand": "cd backend && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn mypyme.wsgi:application --bind 0.0.0.0:$PORT",
     "healthcheckPath": "/api/",
-    "healthcheckTimeout": 100,
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 3
   }
 }
