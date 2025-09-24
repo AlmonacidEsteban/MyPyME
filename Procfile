@@ -1,1 +1,1 @@
-web: gunicorn backend.mypyme.wsgi:application --host 0.0.0.0 --port $PORT
+web: gunicorn backend.mypyme.wsgi:application --bind 0.0.0.0:$PORT
