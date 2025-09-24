@@ -161,12 +161,12 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 
 # Railway specific configuration
-if 'RAILWAY_ENVIRONMENT' in os.environ:
-    # Production settings for Railway
+# Production settings for Render or Railway
+if 'RENDER' in os.environ or 'RAILWAY_ENVIRONMENT' in os.environ:
     DEBUG = False
-    ALLOWED_HOSTS = ['*']  # Railway will handle the domain
+    ALLOWED_HOSTS = ['*']  # Platform will handle the domain
     
-    # Use Railway's PostgreSQL database
+    # Database configuration for production
     DATABASES = {
         'default': dj_database_url.config(
             conn_max_age=600,

@@ -1,0 +1,22 @@
+databases:
+  - name: mypyme-db
+    databaseName: mypyme
+    user: mypyme_user
+
+services:
+  - type: web
+    name: mypyme-web
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "cd backend && gunicorn mypyme.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mypyme-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: RENDER
+        value: true
+      - key: DEBUG
+        value: false
