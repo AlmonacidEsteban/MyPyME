@@ -35,6 +35,34 @@ try:
     django.setup()
     logger.info("Django setup completed")
 
+    # FORZAR MIGRACIONES EN PRODUCCIÓN
+    if os.environ.get('RENDER') or os.environ.get('RAILWAY_ENVIRONMENT'):
+        logger.info("=== EJECUTANDO MIGRACIONES AUTOMÁTICAS ===")
+        try:
+            from django.core.management import execute_from_command_line
+            
+            # Ejecutar migraciones
+            logger.info("Ejecutando migrate...")
+            execute_from_command_line(['manage.py', 'migrate', '--verbosity=2'])
+            
+            # Verificar que auth_user existe
+            from django.contrib.auth.models import User
+            logger.info("Verificando tabla auth_user...")
+            User.objects.exists()
+            logger.info("✅ Tabla auth_user confirmada")
+            
+        except Exception as migration_error:
+            logger.error(f"❌ Error en migraciones: {migration_error}")
+            # Intentar migrate --run-syncdb como último recurso
+            try:
+                logger.info("Intentando migrate --run-syncdb...")
+                execute_from_command_line(['manage.py', 'migrate', '--run-syncdb', '--verbosity=2'])
+                User.objects.exists()
+                logger.info("✅ Tabla auth_user creada con --run-syncdb")
+            except Exception as syncdb_error:
+                logger.error(f"❌ Error con --run-syncdb: {syncdb_error}")
+                raise
+
     # Importar la aplicación WSGI de Django
     from mypyme.wsgi import application
     logger.info("WSGI application imported successfully")
