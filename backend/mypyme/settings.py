@@ -71,17 +71,28 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mypyme.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-import dj_database_url
-
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"postgresql://postgres:postgres@localhost:5432/mypyme",
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+# Production settings for Render/Railway
+if 'RENDER' in os.environ or 'RAILWAY_ENVIRONMENT' in os.environ:
+    # Database configuration for production - using SQLite temporarily
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    # Development database configuration
+    import dj_database_url
+    
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=f"postgresql://postgres:postgres@localhost:5432/mypyme",
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -161,19 +172,10 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 
-# Railway specific configuration
-# Production settings for Render/Railway
+# Production security settings for Render/Railway
 if 'RENDER' in os.environ or 'RAILWAY_ENVIRONMENT' in os.environ:
     DEBUG = False
     ALLOWED_HOSTS = ['*']  # Platform will handle the domain
-    
-    # Database configuration for production - using SQLite temporarily
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
     
     # Security settings for production
     SECURE_SSL_REDIRECT = True
