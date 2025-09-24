@@ -1,2 +1,2 @@
 # Railway deployment configuration
-web: gunicorn --bind 0.0.0.0:${PORT:-8000} backend.mypyme.wsgi:application
+web: gunicorn backend.mypyme.wsgi:application
