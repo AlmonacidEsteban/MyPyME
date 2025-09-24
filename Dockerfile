@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+# Railway provides PORT environment variable
+EXPOSE $PORT
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Use gunicorn for production with Railway's PORT
+CMD gunicorn backend.mypyme.wsgi:application --bind 0.0.0.0:$PORT
