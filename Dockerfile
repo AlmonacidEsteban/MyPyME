@@ -10,5 +10,8 @@ COPY . .
 # Railway will provide PORT environment variable
 EXPOSE 8000
 
-# Use shell form to allow environment variable expansion
-CMD gunicorn backend.mypyme.wsgi:application --bind 0.0.0.0:${PORT:-8000}
+# Run diagnostics and then start gunicorn
+CMD echo "🚀 Iniciando MyPyme en Railway..." && \
+    python check_django.py && \
+    echo "✅ Diagnóstico completado, iniciando servidor..." && \
+    gunicorn backend.mypyme.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 120
