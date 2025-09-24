@@ -35,10 +35,9 @@ urlpatterns = [
     path('health/', health_check, name='health_check_alt'),
     
     path('admin/', admin.site.urls),
-    # Comentando temporalmente para diagnosticar
-    # path('api/', include('api.urls')),
-    # path('auth/', include('dj_rest_auth.urls')),
-    # path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('api/', include('api.urls')),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
     
     # JWT endpoints
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
