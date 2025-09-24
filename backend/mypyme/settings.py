@@ -161,17 +161,17 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 
 # Railway specific configuration
-# Production settings for Render or Railway
+# Production settings for Render/Railway
 if 'RENDER' in os.environ or 'RAILWAY_ENVIRONMENT' in os.environ:
     DEBUG = False
     ALLOWED_HOSTS = ['*']  # Platform will handle the domain
     
-    # Database configuration for production
+    # Database configuration for production - using SQLite temporarily
     DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
     
     # Security settings for production
